@@ -8,23 +8,19 @@ on:
        - '*.*.*'
 
 jobs:
-  build:
+  frontend:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@master
-
       - name: Login to docker hub
         if: success()
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build images
+      - name: Build Frontend
         if: success()
-        run: docker build -t bcfrontend:${IMAGE_TAG} . -f ./frontend/Dockerfile
-        run: docker build -t bcbackend:${IMAGE_TAG} . -f ./backend/Dockerfile
+        run: cd frontend && docker build -t bcfrontend:${IMAGE_TAG} . -f ./Dockerfile
 
       - name: Push to docker registry
         if: success()
@@ -32,6 +28,20 @@ jobs:
         with:
           args: push bcfrontend:${IMAGE_TAG}
 
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Login to docker hub
+        if: success()
+        uses: actions-hub/docker/login@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Backend
+        if: success()
+        run: cd backend && docker build -t bcbackend:${IMAGE_TAG} . -f ./Dockerfile
       - name: Push to docker registry
         if: success()
         uses: actions-hub/docker@master
