@@ -1,0 +1,39 @@
+name: Deploy to docker hub
+
+on:
+   push:
+     branches:
+      - master
+     tags:
+       - '*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Login to docker hub
+        if: success()
+        uses: actions-hub/docker/login@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build images
+        if: success()
+        run: docker build -t bcfrontend:${IMAGE_TAG} . -f ./frontend/Dockerfile
+        run: docker build -t bcbackend:${IMAGE_TAG} . -f ./backend/Dockerfile
+
+      - name: Push to docker registry
+        if: success()
+        uses: actions-hub/docker@master
+        with:
+          args: push bcfrontend:${IMAGE_TAG}
+
+      - name: Push to docker registry
+        if: success()
+        uses: actions-hub/docker@master
+        with:
+          args: push bcbackend:${IMAGE_TAG}
