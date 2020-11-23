@@ -20,13 +20,13 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Frontend
         if: success()
-        run: cd frontend && docker build -t bcfrontend:${IMAGE_TAG} . -f ./Dockerfile
+        run: cd frontend && docker build -t jzlotek/bcfrontend:${IMAGE_TAG} . -f ./Dockerfile
 
       - name: Push to docker registry
         if: success()
         uses: actions-hub/docker@master
         with:
-          args: push bcfrontend:${IMAGE_TAG}
+          args: push jzlotek/bcfrontend:${IMAGE_TAG}
 
   backend:
     runs-on: ubuntu-latest
@@ -41,9 +41,9 @@ jobs:
 
       - name: Build Backend
         if: success()
-        run: cd backend && docker build -t bcbackend:${IMAGE_TAG} . -f ./Dockerfile
+        run: cd backend && docker build -t jzlotek/bcbackend:${IMAGE_TAG} . -f ./Dockerfile
       - name: Push to docker registry
         if: success()
         uses: actions-hub/docker@master
         with:
-          args: push bcbackend:${IMAGE_TAG}
+          args: push jzlotek/bcbackend:${IMAGE_TAG}
