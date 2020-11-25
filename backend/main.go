@@ -31,7 +31,16 @@ type hashNoncePair struct {
 	Nonce uint
 }
 
-func doHashRange(block block.Block, startingString string, maxNonce uint, offset uint, workers uint, hashChan chan hashNoncePair, lock chan bool, kill chan bool) {
+func doHashRange(
+	block block.Block, // will contain all data (nonce gets changed in this functions)
+	startingString string,
+	maxNonce uint,
+	offset uint,
+	workers uint,
+	hashChan chan hashNoncePair, // return channel
+	lock chan bool, // locks the hash channel
+	kill chan bool, // if retrieves a kill signal, return immediately
+) {
 	fmt.Printf("Starting worker: %d\n", offset)
 	var hash []byte
 	var err error
@@ -76,15 +85,17 @@ func doHash(block block.Block, startingString string, maxNonce uint) (string, ui
 	wg := &sync.WaitGroup{}
 	wg.Add(int(workers))
 
+	// dispatch 16 workers
 	for i := uint(0); i < workers; i++ {
 		go func(i uint) {
 			defer wg.Done()
-			doHashRange(block, startingString, maxNonce, uint(i), workers, hashChan, lock, kill)
+			doHashRange(block, startingString, maxNonce, i, workers, hashChan, lock, kill)
 		}(i)
 	}
 
 	hash := <-hashChan
 
+	// send kill signals to workers
 	for i := 0; uint(i) < workers-1; i++ {
 		kill <- true
 	}
