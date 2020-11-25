@@ -1,15 +1,19 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <Card msg="Welcome to Your Vue.js App" />
+  <div>
+    <img alt="Vue logo" src="./assets/logo.png" />
+    Timeline start
+    <Timeline />
+    Timeline end
+  </div>
 </template>
 
 <script>
-import Card from "./components/Card.vue";
+import Timeline from "./components/Timeline.vue";
 
 export default {
   name: "App",
   components: {
-    Card
+    Timeline
   }
 };
 </script>
