@@ -9,8 +9,10 @@ COPY go.mod .
 COPY go.sum .
 
 RUN go mod download
-
 COPY . /src
+
+RUN go test ./... -v
+
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /bin/server
 
 # copy from above into new runner image

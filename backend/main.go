@@ -3,18 +3,121 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
+	"sync"
 	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/jzlotek/bc/block"
 )
 
+type Response struct {
+	Data interface{} `json:"data"`
+}
+
 func getHome(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, map[string]interface{}{"data": "Hello world!"})
+	ctx.JSON(http.StatusOK, Response{"Hello world!"})
+}
+
+type hashNoncePair struct {
+	Hash  []byte
+	Nonce uint
+}
+
+func doHashRange(block block.Block, startingString string, maxNonce uint, offset uint, workers uint, hashChan chan hashNoncePair, lock chan bool, kill chan bool) {
+	fmt.Printf("Starting worker: %d\n", offset)
+	var hash []byte
+	var err error
+	nonce := uint(0) + offset
+
+	for maxNonce == 0 || nonce < maxNonce {
+		block.Nonce = nonce
+		hash, err = block.Hash()
+		select {
+		case <-kill:
+			fmt.Printf("Killing worker: %d\n", offset)
+			return
+		default:
+			if err != nil {
+				continue
+			}
+			if strings.HasPrefix(string(hash), startingString) {
+				select {
+				case <-lock:
+					fmt.Printf("Worker: %d found: %s\n", offset, string(hash))
+					hashChan <- hashNoncePair{hash, nonce}
+					return
+				default:
+					fmt.Printf("Killing worker: %d\n", offset)
+					return
+				}
+			}
+			nonce += workers
+		}
+	}
+}
+
+func doHash(block block.Block, startingString string, maxNonce uint) (string, uint, time.Duration, error) {
+	workers := uint(16)
+	start := time.Now().UTC()
+
+	hashChan := make(chan hashNoncePair)
+	lock := make(chan bool, 1)
+	lock <- true
+	kill := make(chan bool, workers-1)
+
+	wg := &sync.WaitGroup{}
+	wg.Add(int(workers))
+
+	for i := uint(0); i < workers; i++ {
+		go func(i uint) {
+			defer wg.Done()
+			doHashRange(block, startingString, maxNonce, uint(i), workers, hashChan, lock, kill)
+		}(i)
+	}
+
+	hash := <-hashChan
+
+	for i := 0; uint(i) < workers-1; i++ {
+		kill <- true
+	}
+
+	duration := time.Now().Sub(start)
+	wg.Wait()
+	return string(hash.Hash), hash.Nonce, duration, nil
+}
+
+func doSingleHash(ctx *gin.Context) {
+	type req struct {
+		Block       block.Block `json:"block" binding:"required"`
+		StartString string      `json:"start" binding:"required"`
+		MaxNonce    uint        `json:"max"`
+	}
+
+	request := &req{}
+	if err := ctx.ShouldBindBodyWith(request, binding.JSON); err != nil {
+		ctx.JSON(http.StatusBadRequest, Response{err.Error()})
+		return
+	}
+
+	hash, nonce, time, err := doHash(request.Block, request.StartString, request.MaxNonce)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, Response{err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, Response{map[string]interface{}{
+		"hash":  hash,
+		"nonce": nonce,
+		"time":  time,
+	}})
 }
 
 func main() {
@@ -24,6 +127,7 @@ func main() {
 
 	router := gin.Default()
 	router.GET("/", getHome)
+	router.POST("/single", doSingleHash)
 
 	srv := &http.Server{
 		Addr:    *addr,
