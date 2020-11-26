@@ -1,5 +1,7 @@
 # bc
 
+[![Action Status](https://github.com/jzlotek/bc/workflows/Deploy%20to%20docker%20hub/badge.svg)] (https://github.com/jzlotek/bc/actions)
+
 Project for SE 575 at Drexel University
 
 ## Purpose
