@@ -22,8 +22,8 @@ func (b Block) Bytes() []byte {
 	return bytes.Join([][]byte{
 		[]byte(b.PHash),
 		id,
-		[]byte(b.Data),
 		nonce,
+		[]byte(b.Data),
 	}, []byte(""))
 }
 

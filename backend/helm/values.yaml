@@ -1,0 +1,61 @@
+# Default values for microservice.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  replicaCount: 1
+  environment: []
+
+image:
+  repository: "hub.docker.com/jzlotek/bcbackend"
+  tag: "1.0.0" # will be overriden by gitlab CI/CD
+  pullPolicy: IfNotPresent
+
+# nameOverride: ""
+# fullnameOverride: ""
+
+livenessEndpoint: /healthz
+readinessEndpoint: /healthz
+
+#imagePullSecrets: gitlabpullsecret
+serviceAccount: bc
+
+annotations: {}
+
+services:
+  - name: web
+    type: ClusterIP
+    specs:
+    - port: 80
+      targetPort: 8000
+      name: http
+#targetPort: is the port the container accepts traffic on,
+#port: is the abstracted Service port, which can be any port other pods use to access the Service
+#https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#serviceport-v1-core
+
+environment:
+  - name: GIN_MODE
+    value: release
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: bc.dulcimer.live
+      servicePort: 80
+      serviceName: web
+      path: /go
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
