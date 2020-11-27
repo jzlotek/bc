@@ -46,7 +46,7 @@ func doHashRange(
 	var err error
 	nonce := uint(0) + offset
 
-	for maxNonce == 0 || nonce < maxNonce {
+	for ; maxNonce == 0 || nonce < maxNonce; nonce += workers {
 		select {
 		case <-kill:
 			return
@@ -66,7 +66,6 @@ func doHashRange(
 					return
 				}
 			}
-			nonce += workers
 		}
 	}
 }
@@ -202,6 +201,8 @@ func main() {
 
 	router := gin.Default()
 	router.GET("/", getHome)
+	router.GET("/healthz", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, nil) })
+
 	router.POST("/single", doSingleHash)
 	router.POST("/multi", doMultiHash)
 
