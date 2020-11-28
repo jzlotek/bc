@@ -1,5 +1,5 @@
 <template>
-  <div class="card" v-bind:ref=" blockNum ">
+  <Timeline ></Timeline>
     <b>Bind these text values to their props.</b><br>
     <b>Convert these text values into input fields.</b><br>
     <b>On change in input fields, display the block as red.</b><br>
@@ -9,17 +9,15 @@
     <div>Nonce: {{ nonce }}</div>
     <div>prevHash: {{ prevHash }}</div>
     <div>curHash: {{ curHash }}</div>
-    <div v-if="tampered === true">
-      <button @click="remine()" type="button">Mine!</button>
-    </div>
-  </div>
 </template>
 
 <script>
-  import { Timeline } from "@/components/Timeline.vue";
-
+  import Timeline from "./Timeline.vue";
   export default {
     name: "Card",
+    components: {
+      'timeline': { Timeline },
+    },
     props: {
       blockNum: String,
       data: String,
@@ -30,42 +28,13 @@
     },
     methods: {
       remine: function () {
-        alert("Block #" + this.blockNum + " will be remined.\nremine() is WIP.");
+        console.log('d')
         this.$refs[this.blockNum].classList += " cardGood";
-        this.nextBlock();
+        //this.$emit('mine', this.$refs[this.blockNum]);
       },
-      mine: function () {
-        alert("Block #" + this.blockNum + " will be mined.\nmine() is WIP.");
-      },
-      nextBlock: function () {
-        console.log(Timeline);
-      }
     }
   };
 </script>
 
 <style scoped lang="scss">
-.card {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  border: 0.5rem solid red;
-  padding: 1rem;
-  border-radius: 0.5rem;
-}
-
-.cardGood {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  border: 0.5rem solid green;
-  padding: 1rem;
-  border-radius: 0.5rem;
-}
 </style>
