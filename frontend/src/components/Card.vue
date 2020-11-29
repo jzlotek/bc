@@ -1,5 +1,4 @@
 <template>
-  <Timeline ></Timeline>
     <b>Bind these text values to their props.</b><br>
     <b>Convert these text values into input fields.</b><br>
     <b>On change in input fields, display the block as red.</b><br>
@@ -12,12 +11,8 @@
 </template>
 
 <script>
-  import Timeline from "./Timeline.vue";
   export default {
     name: "Card",
-    components: {
-      'timeline': { Timeline },
-    },
     props: {
       blockNum: String,
       data: String,

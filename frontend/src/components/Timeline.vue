@@ -10,7 +10,7 @@
         :tampered="card.tampered"
         :func="this.remine"
       />
-      <button @click="remine(card.blockNum)" type="button">Mine!</button>
+      <button v-if="card.tampered==true" @click="remine(card)" type="button">Mine!</button>
     </div>
   </div>
 </template>
@@ -38,11 +38,11 @@ export default {
     nextBlock: function() {
       this.$click('mine', console.log('s'));
     },
-    remine: function (block) {
-      console.log(block);
-      this.$refs[block].classList += " cardGood";
+    remine: function (card) {
+      this.$refs[card.blockNum].classList += " cardGood";
+      card.tampered = false;
       this.cards.push({
-        blockNum: String(parseInt(block) + 1),
+        blockNum: String(parseInt(card.blockNum) + 1),
         data: "some",
         nonce: "-1",
         prevHash: "0",
