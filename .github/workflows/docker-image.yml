@@ -63,6 +63,7 @@ jobs:
       - name: Deploy
         run: |
           export KUBECONFIG=/tmp/config
+          export IMAGE_TAG=$(echo $GITHUB_REF | sed 's/refs\/head\///g')
           echo '${{ secrets.KUBE_CONFIG }}' > $KUBECONFIG
           helm upgrade --install bcbackend jzlotek/microservice --set image.tag=${IMAGE_TAG} --values backend/helm/values.yaml --namespace bc
           helm upgrade --install bcfrontend jzlotek/microservice --set image.tag=${IMAGE_TAG} --values frontend/helm/values.yaml --namespace bc
