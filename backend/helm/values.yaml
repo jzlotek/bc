@@ -42,7 +42,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: traefik
     kubernetes.io/tls-acme: "true"
-    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+    traefik.ingress.kubernetes.io/rewrite-target: /
   hosts:
     - host: bc.dulcimer.live
       servicePort: 80
