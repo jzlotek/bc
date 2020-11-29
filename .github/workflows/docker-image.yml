@@ -30,10 +30,20 @@ jobs:
 
       - name: Deploy to Kube
         if: success()
-        uses: WyriHaximus/github-action-helm3@v2
+        uses: 'deliverybot/helm3@v1'
         with:
-          exec: cd frontend && helm repo add jzlotek jzlotek.github.io/helm-charts && helm repo update && helm upgrade --install bcfrontend jzlotek/microservice --values helm/values.yaml --set image.tag=${IMAGE_TAG}
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          namespace: 'bc'
+          release: 'bcfrontend'
+          chart: 'jzlotek/microservice'
+          repo: 'jzlotek.github.io/helm-charts'
+          repo-alias: 'jzlotek'
+          value-files:
+            - "frontend/helm/values.yaml"
+          values: |
+            image:
+              tag: $IMAGE_TAG
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBE_CONFIG }}'
 
   backend:
     runs-on: ubuntu-latest
@@ -57,7 +67,17 @@ jobs:
 
       - name: Deploy to Kube
         if: success()
-        uses: WyriHaximus/github-action-helm3@v2
+        uses: 'deliverybot/helm3@v1'
         with:
-          exec: cd backend && helm repo add jzlotek jzlotek.github.io/helm-charts && helm repo update && helm upgrade --install bcbackend jzlotek/microservice --values helm/values.yaml --set image.tag=${IMAGE_TAG}
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          namespace: 'bc'
+          release: 'bcbackend'
+          chart: 'jzlotek/microservice'
+          repo: 'jzlotek.github.io/helm-charts'
+          repo-alias: 'jzlotek'
+          value-files:
+            - "backend/helm/values.yaml"
+          values: |
+            image:
+              tag: $IMAGE_TAG
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBE_CONFIG }}'
