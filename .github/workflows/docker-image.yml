@@ -37,7 +37,7 @@ jobs:
           chart: 'jzlotek/microservice'
           repo: 'jzlotek.github.io/helm-charts'
           repo-alias: 'jzlotek'
-          value-files: ["frontend/helm/values.yaml"]
+          value-files: '["frontend/helm/values.yaml"]'
           values: |
             image:
               tag: $IMAGE_TAG
@@ -73,7 +73,7 @@ jobs:
           chart: 'jzlotek/microservice'
           repo: 'jzlotek.github.io/helm-charts'
           repo-alias: 'jzlotek'
-          value-files: ["backend/helm/values.yaml"]
+          value-files: '["backend/helm/values.yaml"]'
           values: |
             image:
               tag: $IMAGE_TAG
