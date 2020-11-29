@@ -30,7 +30,7 @@ jobs:
 
       - name: Deploy to Kube
         if: success()
-        uses: 'deliverybot/helm3@v1'
+        uses: 'deliverybot/helm@v1'
         with:
           namespace: 'bc'
           release: 'bcfrontend'
@@ -66,7 +66,7 @@ jobs:
 
       - name: Deploy to Kube
         if: success()
-        uses: 'deliverybot/helm3@v1'
+        uses: 'deliverybot/helm@v1'
         with:
           namespace: 'bc'
           release: 'bcbackend'
