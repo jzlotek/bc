@@ -14,9 +14,6 @@ image:
 # nameOverride: ""
 # fullnameOverride: ""
 
-livenessEndpoint: /healthz
-readinessEndpoint: /healthz
-
 #imagePullSecrets: gitlabpullsecret
 serviceAccount: bc
 
@@ -27,7 +24,7 @@ services:
     type: ClusterIP
     specs:
     - port: 80
-      targetPort: 8000
+      targetPort: 80
       name: http
 #targetPort: is the port the container accepts traffic on,
 #port: is the abstracted Service port, which can be any port other pods use to access the Service
