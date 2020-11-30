@@ -5,10 +5,11 @@
         :blockNum="card.blockNum"
         :data="card.data"
         :nonce="card.nonce"
-        :prevHash="card.prevHash"
-        :curHash="card.curHash"
+        :parent="card.parent"
+        :hash="card.hash"
         :tampered="card.tampered"
         :func="this.remine"
+        v-on:changed="checkTampered($event, card)"
       />
       <button v-if="card.tampered==true" @click="remine(card)" type="button">Mine!</button>
     </div>
@@ -25,29 +26,42 @@ export default {
     cards: [
         {
           blockNum: "0",
-          data:"This is the starter block.",
+          dataHeld:"This is the starter block.",
           nonce: "-1",
-          prevHash: "0",
-          curHash: "calculatedHashOfThisBlock",
-          tampered: true
+          parent: "0",
+          hash: "calculatedHashOfThisBlock",
+          tampered: true,
+          dataMined: ""
        }
       ]
     }
   ),
   methods: {
-    nextBlock: function() {
-      this.$click('mine', console.log('s'));
+    checkTampered: function(data, card) {
+      var i;
+      if (card.dataMined != data && card.tampered == false) {
+        for (i = card.blockNum; i < this.cards.length; i++) {
+          this.$refs[i].classList.remove("cardGood");
+          this.cards[i].tampered = true;
+        }
+      }
+      else {
+        console.log("d")
+      }
     },
     remine: function (card) {
-      this.$refs[card.blockNum].classList += " cardGood";
+      this.$refs[card.blockNum].classList.add("cardGood");
       card.tampered = false;
+      card.dataMined = card.data;
+
       this.cards.push({
         blockNum: String(parseInt(card.blockNum) + 1),
         data: "some",
         nonce: "-1",
-        prevHash: "0",
-        curHash: "new",
+        parent: String(this.cards[card.blockNum].hash),
+        hash: "new",
         tampered: true,
+        dataMined: ""
       })
     },
   }

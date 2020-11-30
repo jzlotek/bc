@@ -4,10 +4,12 @@
     <b>On change in input fields, display the block as red.</b><br>
     <b>Show the <em>Mine!</em> only if the block has been tampered:</b> <br>
     <div>Block: #{{ blockNum }}: </div>
-    <div>Data: {{ data }}</div>
+    <div v-if="newData == data">Data: {{ data }}</div>
+    <div v-else>Data: {{ newData }}</div>
     <div>Nonce: {{ nonce }}</div>
-    <div>prevHash: {{ prevHash }}</div>
-    <div>curHash: {{ curHash }}</div>
+    <div>Parent: {{ parent }}</div>
+    <div>Hash: {{ hash }}</div>
+    <div>Enter Data: <input id="newData" v-model="newData" @keypress="emitFunction"></div>
 </template>
 
 <script>
@@ -17,15 +19,14 @@
       blockNum: String,
       data: String,
       nonce: Number, // Invalid prop: type check failed for prop
-      prevHash: String,
-      curHash: String,
+      parent: String,
+      hash: String,
       tampered: Boolean,
     },
     methods: {
-      remine: function () {
-        console.log('d')
-        this.$refs[this.blockNum].classList += " cardGood";
-        //this.$emit('mine', this.$refs[this.blockNum]);
+      emitFunction: function () {
+        console.log("here");
+        this.$emit('changed', document.getElementById("newData").value);
       },
     }
   };
