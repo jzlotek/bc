@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jzlotek/bc/block"
@@ -200,6 +201,13 @@ func main() {
 	flag.Parse()
 
 	router := gin.Default()
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"https://bc.dulcimer.live"},
+		AllowMethods: []string{"POST"},
+		AllowHeaders: []string{"Origin"},
+	}))
+
 	router.GET("/", getHome)
 	router.GET("/healthz", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, nil) })
 
