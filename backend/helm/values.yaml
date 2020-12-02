@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 global:
-  replicaCount: 1
+  replicaCount: 3
   environment: []
 
 image:
@@ -44,7 +44,8 @@ ingress:
     kubernetes.io/tls-acme: "true"
     traefik.ingress.kubernetes.io/rewrite-target: /
     traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
-    traefik.ingress.kubernetes.io/router.middleware: bc-stripprefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: bc-stripprefix@kubernetescrd
   hosts:
     - host: bc.dulcimer.live
       servicePort: 80
