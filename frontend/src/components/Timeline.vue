@@ -103,7 +103,6 @@
           });
         axios.post("https://bc.dulcimer.live/go/single", request)
                 .then(response => {
-                  console.log(response.data.data);
                   card.hash = response.data.data.hash;
                   card.nonce = response.data.data.nonce;
                   card.time = response.data.data.time;
@@ -123,8 +122,7 @@
                   }
                 })
                 .then(data => this.postId = data.id)
-                .catch(err => console.error(err.response));
-
+                .catch(err => console.error(err));
       }
     }
   };
