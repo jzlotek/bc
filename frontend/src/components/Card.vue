@@ -1,12 +1,12 @@
 <template>
-    <div>Block: #{{ blockNum }}</div>
-    <div v-if="newData == data">Data: {{ data }}</div>
-    <div v-else>Data: {{ newData }}</div>
-    <div>Nonce: {{ nonce }}</div>
-    <div>Parent: {{ parent }}</div>
-    <div>Hash: {{ hash }}</div>
-    <div>Enter Data: <input id="newData" v-model="newData" @keypress="emitFunction"></div>
-    <div>Time: {{ time }}</div>
+    <div><p>Block:</p> #{{ blockNum }}</div>
+    <div v-if="newData == data"><p>Data:</p> {{ data }}</div>
+    <div v-else><p>Data:</p> {{ newData }}</div>
+    <div><p>Nonce:</p> {{ nonce }}</div>
+    <div><p>Parent:</p> {{ parent }}</div>
+    <div><p>Hash:</p> {{ hash }}</div>
+    <div><p>Enter Data: </p> <input id="newData" v-model="newData" @keypress="emitFunction"></div>
+    <div><p>Time:</p> {{ time }}</div>
 </template>
 
 <script>
@@ -30,4 +30,17 @@
 </script>
 
 <style scoped lang="scss">
+    div {
+        padding: 2px;
+        font-family: Chalkboard;
+    }
+
+    p {
+        display: inline;
+        font-weight: bolder;
+    }
+
+    input {
+        background: seashell;
+    }
 </style>

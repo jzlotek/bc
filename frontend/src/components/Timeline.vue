@@ -1,4 +1,5 @@
 <template>
+  <button class="mineAll" @click="mineall" type="button">Mine All</button>
   <div v-for="card in cards" :key="card.blockNum">
     <div class="card" v-bind:ref=" card.blockNum ">
       <Card
@@ -46,6 +47,28 @@
           for (i = card.blockNum; i < this.cards.length; i++) {
             this.$refs[i].classList.remove("cardGood");
             this.cards[i].tampered = true;
+          }
+        }
+      },
+      mineall: function() {
+        var i;
+        for (i = 0; i < this.cards.length; i++) {
+          var card = this.cards[i];
+          if (card.tampered == false) {
+            continue;
+          }
+          if (card.mined == true) {
+            this.$refs[card.blockNum].classList.add("cardGood");
+            card.tampered = false;
+            card.dataMined = card.data;
+
+            this.api(card, true);
+          } else {
+            this.$refs[card.blockNum].classList.add("cardGood");
+            card.tampered = false;
+            card.dataMined = card.data;
+
+            this.api(card, false);
           }
         }
       },
@@ -112,23 +135,38 @@
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
+    text-align: left;
     color: #2c3e50;
     margin-top: 60px;
-    border: 0.5rem solid red;
+    border: 0.5rem solid darkred;
     padding: 1rem;
     border-radius: 0.5rem;
+    background: #ffd3cf;
+    display: inline-grid;
+    width: 700px;
   }
 
   .cardGood {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
+    text-align: left;
     color: #2c3e50;
     margin-top: 60px;
-    border: 0.5rem solid green;
+    border: 0.5rem solid darkgreen;
     padding: 1rem;
     border-radius: 0.5rem;
+    background: #c4ffd1;
+    display: inline-grid;
+    width: 700px;
   }
+
+  button {
+    background: white;
+    font-size: 20px;
+    border-radius: 10px;
+    font-family: Chalkboard;
+    width: 150px;
+  }
+
 </style>
