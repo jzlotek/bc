@@ -202,11 +202,12 @@ func main() {
 
 	router := gin.Default()
 
-	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://bc.dulcimer.live"},
-		AllowMethods: []string{"POST"},
-		AllowHeaders: []string{"Origin"},
-	}))
+	// router.Use(cors.New(cors.Config{
+	// 	AllowOrigins: []string{"https://bc.dulcimer.live"},
+	// 	AllowMethods: []string{"POST"},
+	// 	AllowHeaders: []string{"Origin"},
+	// }))
+	router.Use(cors.Default())
 
 	router.GET("/", getHome)
 	router.GET("/healthz", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, nil) })
