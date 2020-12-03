@@ -8,64 +8,103 @@
         :parent="card.parent"
         :hash="card.hash"
         :tampered="card.tampered"
-        :func="this.remine"
+        :time="card.time"
         v-on:changed="checkTampered($event, card)"
       />
-      <button v-if="card.tampered==true" @click="remine(card)" type="button">Mine!</button>
+      <button v-if="card.tampered==true" @click="mine(card)" type="button">Mine</button>
     </div>
   </div>
 </template>
 
 <script>
-import Card from "./Card.vue";
+  import Card from "./Card.vue";
+  import axios from "axios";
 
-export default {
-  name: "Timeline",
-  components: { Card },
-  data: () => ({
-    cards: [
-        {
-          blockNum: "0",
-          dataHeld:"This is the starter block.",
-          nonce: "-1",
-          parent: "0",
-          hash: "calculatedHashOfThisBlock",
-          tampered: true,
-          dataMined: ""
-       }
-      ]
-    }
-  ),
-  methods: {
-    checkTampered: function(data, card) {
-      var i;
-      if (card.dataMined != data && card.tampered == false) {
-        for (i = card.blockNum; i < this.cards.length; i++) {
-          this.$refs[i].classList.remove("cardGood");
-          this.cards[i].tampered = true;
+  export default {
+    name: "Timeline",
+    components: { Card },
+    data: () => ({
+              cards: [
+                {
+                  blockId: 0,
+                  blockNum: "0",
+                  dataHeld:"Genesis block.",
+                  nonce: 0,
+                  parent: "0000000000000000000000000000000000000000000000000000000000000000",
+                  hash: "0000000000000000000000000000000000000000000000000000000000000000",
+                  tampered: true,
+                  time: 0,
+                  mined: false
+                }
+              ]
+            }
+    ),
+    methods: {
+      checkTampered: function(data, card) {
+        var i;
+        if (card.dataMined != data && card.tampered == false) {
+          for (i = card.blockNum; i < this.cards.length; i++) {
+            this.$refs[i].classList.remove("cardGood");
+            this.cards[i].tampered = true;
+          }
         }
-      }
-      else {
-        console.log("d")
-      }
-    },
-    remine: function (card) {
-      this.$refs[card.blockNum].classList.add("cardGood");
-      card.tampered = false;
-      card.dataMined = card.data;
+      },
+      mine: function (card) {
+        var i;
+        for (i = 0; i < this.cards.length; i++) {
+          if (card.mined == true) {
+            this.$refs[card.blockNum].classList.add("cardGood");
+            card.tampered = false;
+            card.dataMined = card.data;
 
-      this.cards.push({
-        blockNum: String(parseInt(card.blockNum) + 1),
-        data: "some",
-        nonce: "-1",
-        parent: String(this.cards[card.blockNum].hash),
-        hash: "new",
-        tampered: true,
-        dataMined: ""
-      })
-    },
-  }
-};
+            this.api(card, true);
+            return 0;
+          }
+        }
+
+        this.$refs[card.blockNum].classList.add("cardGood");
+        card.tampered = false;
+        card.dataMined = card.data;
+
+        this.api(card, false);
+      },
+      api: function (card, remine) {
+        const request = JSON.stringify({
+            "start": "000",
+            "block": {
+              "previous_hash": card.parent,
+              "id": card.blockId,
+              "nonce": card.nonce,
+              "data": card.data
+            }
+          });
+        axios.post("https://bc.dulcimer.live/go/single", request)
+                .then(response => {
+                  console.log(response.data.data);
+                  card.hash = response.data.data.hash;
+                  card.nonce = response.data.data.nonce;
+                  card.time = response.data.data.time;
+                  card.mined = true;
+                  if (remine === false) {
+                    this.cards.push({
+                      blockId: card.blockId + 1,
+                      blockNum: String(parseInt(card.blockNum) + 1),
+                      data: "some",
+                      nonce: 0,
+                      parent: card.hash,
+                      hash: "0000000000000000000000000000000000000000000000000000000000000000",
+                      tampered: true,
+                      time: 0,
+                      mined: false
+                    })
+                  }
+                })
+                .then(data => this.postId = data.id)
+                .catch(err => console.error(err.response));
+
+      }
+    }
+  };
 </script>
 
 <style scoped lang="scss">

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <img alt="Vue logo" src="./assets/logo.png" />
-    Timeline start
     <Timeline />
-    Timeline end
   </div>
 </template>
 
