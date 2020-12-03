@@ -121,7 +121,6 @@
                     })
                   }
                 })
-                .then(data => this.postId = data.id)
                 .catch(err => console.error(err));
       }
     }
