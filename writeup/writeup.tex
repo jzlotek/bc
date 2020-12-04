@@ -1,0 +1,59 @@
+\title{SE 575\\
+	\normalsize{Final Project}\\
+	\small{\url{https://github.com/jzlotek/bc}}
+}
+\author{
+John Zlotek | Kevin Wu | Jainil Patel  
+}
+\date{\today}
+\documentclass[12pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+
+
+\begin{document}
+\maketitle
+
+\section{Features}
+
+\begin{itemize}
+	\item Proof of work algorithm (SHA 256)
+	\item Backend concurrent worker routine
+	\item Separated front and back end
+	\item Reactive front end
+	\item Deployed via Kubernetes using Docker images
+\end{itemize}
+
+
+
+\section{Deployment Pipeline}
+
+We are using GitHub Actions for our entire deployment lifecycle.
+We are used to using GitLab CI/CD for building, testing, and deploying so some of this had to be learned.
+It has some features like dependent pipeline runners (which was not used here at all) which is cool.
+The \href{https://github.com/jzlotek/bc/blob/main/.github/workflows/docker-image.yml}{pipeline} we built runs both Docker images in parallel then pushes them to \url{https://hub.docker.com/u/jzlotek} so they can be pulled by the next step in the pipeline which is the Kube deployment step via Helm.
+Helm charts are essentially packages for Kube.
+We created our own microservice helm chart for Kube.
+The values for each service are found in the $helm/values.yaml$ in each directory.
+The Helm deploy stage takes the two built image tags and deploys them with the respected Helm chart to our Kubernetes instance.
+
+\section{Using Kubernetes}
+
+In terms of scalability and high availability, we are utilizing Kubernetes to spin off our backend processes.
+Because our front end is a static site, it is only sitting at 2 instances where the backend workers are using 3 to 4 workers.
+We are using traefik as our ingress controller to route on the subdomain \url{https://bc.dulcimer.live}.
+Traefik is also able to differentiate between the frontend and the backend as the backend has the path prefix \url{/go} for all of the requests. From testing with Kubernetes and our memory and cpu limits, when you spin up too many workers, it will crash that instance of the worker request pool.
+Kubernetes is able to keep the other 2 instances up when the one is deemed OOM and is killed.
+Thanks to Gin, the startup time for the new instance is almost instant.
+
+\end{document}
+
