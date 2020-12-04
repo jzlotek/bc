@@ -1,9 +1,8 @@
 <template>
+  <h1 class="header" id="hOneHead">CryptoSim</h1>
+  <p class="header" id="pOneHead">John Zlotek | Kevin Wu | Jainil Patel</p>
   <div>
-    <img alt="Vue logo" src="./assets/logo.png" />
-    Timeline start
     <Timeline />
-    Timeline end
   </div>
 </template>
 
@@ -19,6 +18,9 @@ export default {
 </script>
 
 <style lang="scss">
+  body {
+    background: black;
+  }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -27,4 +29,16 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+  .header {
+    color: oldlace;
+    font-family: Mshtakan;
+  }
+
+  #hOneHead {
+    font-size: 35px;
+  }
+
+  #pOneHead {
+    font-size: 20px;
+  }
 </style>

@@ -1,15 +1,12 @@
 <template>
-    <b>Bind these text values to their props.</b><br>
-    <b>Convert these text values into input fields.</b><br>
-    <b>On change in input fields, display the block as red.</b><br>
-    <b>Show the <em>Mine!</em> only if the block has been tampered:</b> <br>
-    <div>Block: #{{ blockNum }}: </div>
-    <div v-if="newData == data">Data: {{ data }}</div>
-    <div v-else>Data: {{ newData }}</div>
-    <div>Nonce: {{ nonce }}</div>
-    <div>Parent: {{ parent }}</div>
-    <div>Hash: {{ hash }}</div>
-    <div>Enter Data: <input id="newData" v-model="newData" @keypress="emitFunction"></div>
+    <div><p>Block:</p> #{{ blockNum }}</div>
+    <div v-if="newData == data"><p>Data:</p> {{ data }}</div>
+    <div v-else><p>Data:</p> {{ newData }}</div>
+    <div><p>Nonce:</p> {{ nonce }}</div>
+    <div><p>Parent:</p> {{ parent }}</div>
+    <div><p>Hash:</p> {{ hash }}</div>
+    <div><p>Enter Data: </p> <input id="newData" v-model="newData" @keypress="emitFunction"></div>
+    <div><p>Time:</p> {{ time }}</div>
 </template>
 
 <script>
@@ -22,10 +19,10 @@
       parent: String,
       hash: String,
       tampered: Boolean,
+        time: String,
     },
     methods: {
       emitFunction: function () {
-        console.log("here");
         this.$emit('changed', document.getElementById("newData").value);
       },
     }
@@ -33,4 +30,17 @@
 </script>
 
 <style scoped lang="scss">
+    div {
+        padding: 2px;
+        font-family: Chalkboard;
+    }
+
+    p {
+        display: inline;
+        font-weight: bolder;
+    }
+
+    input {
+        background: seashell;
+    }
 </style>
