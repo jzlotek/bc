@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # [CryptoSim](https://github.com/jzlotek/bc/blob/main/README.md)
+=======
+# [CryptoSim](https://github.com/jzlotek/bc/README.md)
+>>>>>>> 2c66e0072178cd349e34006e0707a34950b2dd4e
 
 ![Action Status](https://github.com/jzlotek/bc/workflows/Deploy%20to%20docker%20hub/badge.svg)
 ## Purpose
