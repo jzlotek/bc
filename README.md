@@ -32,7 +32,7 @@ You can specify the ports, flags, and tags. These are some example commands
   - Run: `docker-compose up --build`
   - Go to `http://localhost:8000`
 - From pre-built images:
-  - `docker pull jzlotek/bcfrontend:1.4.1`
-  - `docker pull jzlotek/bcbackend:1.4.1`
-  - `docker run -d -p 8080:80 jzlotek/bcfrontend:1.4.1`
-  - `docker run -d -p 8081:8000 jzlotek/bcbackend:1.4.1`
+  - `docker pull jzlotek/bcfrontend:1.5.0`
+  - `docker pull jzlotek/bcbackend:1.5.0`
+  - `docker run -d -p 8080:80 jzlotek/bcfrontend:1.5.0`
+  - `docker run -d -p 8081:8000 jzlotek/bcbackend:1.5.0`
