@@ -4,6 +4,11 @@
 
 Project for SE 575 at Drexel University
 
+## Playing with this Codebase
+
+- Run: `docker-compose up --build`
+- Go to `http://localhost:8000`
+
 ## Purpose
 
 Learn software architecting principles through creating a modular interface for a block chain system.

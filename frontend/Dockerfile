@@ -11,6 +11,10 @@ COPY package-lock.json .
 RUN npm ci
 
 COPY . .
+
+ARG VUE_APP_ROOT_ENDPOINT
+ENV VUE_APP_ROOT_ENDPOINT=$VUE_APP_ROOT_ENDPOINT
+
 RUN npm run build
 
 FROM nginx:1.19.3 as runner

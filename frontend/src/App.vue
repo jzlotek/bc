@@ -18,9 +18,9 @@ export default {
 </script>
 
 <style lang="scss">
-  body {
-    background: black;
-  }
+body {
+  background: black;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -29,16 +29,16 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-  .header {
-    color: oldlace;
-    font-family: Mshtakan;
-  }
+.header {
+  color: oldlace;
+  font-family: Mshtakan;
+}
 
-  #hOneHead {
-    font-size: 35px;
-  }
+#hOneHead {
+  font-size: 35px;
+}
 
-  #pOneHead {
-    font-size: 20px;
-  }
+#pOneHead {
+  font-size: 20px;
+}
 </style>

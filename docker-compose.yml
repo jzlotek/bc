@@ -1,0 +1,18 @@
+version: '3.4'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VUE_APP_ROOT_ENDPOINT: "http://localhost:8001"
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8001:8000"
+    environment:
+      - GIN_MODE=release
