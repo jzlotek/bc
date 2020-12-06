@@ -1,19 +1,17 @@
-# bc
+# [CryptoSim](https://github.com/jzlotek/bc/blob/main/README.md)
 
-![![Action Status](https://github.com/jzlotek/bc/workflows/Deploy%20to%20docker%20hub/badge.svg)](https://github.com/jzlotek/bc/actions)
+![Action Status](https://github.com/jzlotek/bc/workflows/Deploy%20to%20docker%20hub/badge.svg)
+## Purpose
 
 Project for SE 575 at Drexel University
 
-## Purpose
-
-Learn software architecting principles through creating a modular interface for a block chain system.
+Learn software architecting principles through creating a modular interface for a blockchain system.
 
 ## Technologies Used
 
 ### Frontend
 
-- Vue.js
-- Bootstrap
+- Vue
 
 ### Backend
 
@@ -22,4 +20,11 @@ Learn software architecting principles through creating a modular interface for 
 ### Infrastructure
 
 - Docker
-- Docker Compose
+- Kubernetes
+
+# Instructions
+You can specify the ports, flags, and tags. These are some example commands
+ - `docker pull jzlotek/bcfrontend:1.4.1`
+ - `docker pull jzlotek/bcbackend:1.4.1`
+ - `docker run -d -p 8080:80 jzlotek/bcfrontend:1.4.1`
+ - `docker run -d -p 8081:8000 jzlotek/bcbackend:1.4.1`
